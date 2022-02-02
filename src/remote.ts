@@ -28,6 +28,7 @@ const opt = {
     port: parseInt(process.argv[3], 10),
     type: process.argv[4] as apid.ChannelType,
     channel: process.argv[5],
+    priority: parseInt(process.argv[6], 10),
     decode: process.argv.includes("decode") === true
 };
 
@@ -40,7 +41,7 @@ client.host = opt.host;
 client.port = opt.port;
 client.userAgent = "Mirakurun (Remote)";
 
-client.getChannelStream(opt.type, opt.channel, opt.decode)
+client.getChannelStream(opt.type, opt.channel, opt.decode, opt.priority)
     .then(_stream => {
         stream = _stream;
         stream.pipe(process.stdout);

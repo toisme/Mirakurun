@@ -183,10 +183,10 @@ export default class TunerDevice extends EventEmitter {
                     }
 
                     await this._kill(true);
-                    this._spawn(channel);
+                    this._spawn(channel, user.priority);
                 }
             } else {
-                this._spawn(channel);
+                this._spawn(channel, user.priority);
             }
         }
 
@@ -243,7 +243,7 @@ export default class TunerDevice extends EventEmitter {
         return programs;
     }
 
-    private _spawn(ch: ChannelItem): void {
+    private _spawn(ch: ChannelItem, priority: number): void {
 
         log.debug("TunerDevice#%d spawn...", this._index);
 
@@ -259,6 +259,7 @@ export default class TunerDevice extends EventEmitter {
             cmd += " " + (this._config.remoteMirakurunPort || 40772);
             cmd += " " + ch.type;
             cmd += " " + ch.channel;
+            cmd += " " + ((priority > 0) ? priority : 0);
             if (this._config.remoteMirakurunDecoder === true) {
                 cmd += " decode";
             }
@@ -441,7 +442,7 @@ export default class TunerDevice extends EventEmitter {
             log.warn("TunerDevice#%d respawning because request has not closed", this._index);
             ++status.errorCount.tunerDeviceRespawn;
 
-            this._spawn(this._channel);
+            this._spawn(this._channel, this.getPriority());
             return;
         }
 
